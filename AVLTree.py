@@ -154,7 +154,6 @@ class AVLTree(object):
 
         return select_rec(self.root, i)
 
-
     """finds the node with the largest value in a specified range of keys
 
     @type a: int
@@ -167,13 +166,29 @@ class AVLTree(object):
     """
 
     def max_range(self, a, b):
-        return None
+        def find_max(node, a, b, max_val):
+            if node.key == a or node.key == b:
+                return max(max_val, node.val)
+            left_max = find_max(node.left, a, b, max_val)
+            max_val = max(left_max, max_val)
+            find_max(node.right, a, b, max_val)
 
-    """returns the root of the tree representing the dictionary
+        curr = self.root
+        while curr.key < a or curr.key > b:
+            if curr.key > b:
+                curr = curr.left
+            elif curr.key < a:
+                curr = curr.right
 
-    @rtype: AVLNode
-    @returns: the root, None if the dictionary is empty
-    """
+        return find_max(curr, a, b, curr.val)
 
-    def get_root(self):
-        return self.root if self.root.is_real_node() else None
+
+"""returns the root of the tree representing the dictionary
+
+@rtype: AVLNode
+@returns: the root, None if the dictionary is empty
+"""
+
+
+def get_root(self):
+    return self.root if self.root.is_real_node() else None
