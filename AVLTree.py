@@ -143,16 +143,17 @@ class AVLTree(object):
     """
 
     def select(self, i):
-        """
-        1. 𝑟 → 𝑥. 𝑙𝑒𝑓𝑡. 𝑠𝑖𝑧𝑒 + 1
-        2. if 𝑘 = 𝑟
-        2.1 return 𝑥
-        3. else if 𝑘 < 𝑟
-        3.1 return Tree-Select-rec(𝑥. 𝑙𝑒𝑓𝑡, 𝑘)
-        4. else return Tree-Select-rec(𝑥. 𝑟𝑖𝑔ℎ𝑡, 𝑘 – 𝑟)
-        """
-        
-        return None
+        def select_rec(node, i):
+            rank = node.left.size + 1
+            if i == rank:
+                return node
+            elif i < rank:
+                return select_rec(node.left, i)
+            else:
+                return select_rec(node.right, i - rank)
+
+        return select_rec(self.root, i)
+
 
     """finds the node with the largest value in a specified range of keys
 
