@@ -36,7 +36,8 @@ class AVLNode(object):
 			return True
 		return False
 
-
+	def get_BF(self):
+		return self.left.height - self.right.height
 
 """
 A class implementing an AVL tree.
@@ -85,9 +86,53 @@ class AVLTree(object):
 	@returns: the number of rebalancing operation due to AVL rebalancing
 	"""
 	def insert(self, key, val):
+		node = self.root
+		new = AVLNode(key, val)
+		parent = None
+		while node.is_real_node():
+			parent = node
+			if node.key < key:
+				node = node.right
+			else:
+				node = node.left
 
+
+		if not parent.is_real_node():
+			parent = new
+		elif key < parent.key:
+			parent.left = new
+		else:
+			parent.right = new
+
+		prev_height = parent.height
+		parent.height = max(parent.left.height, parent.right.height) +1
+
+		while parent.is_real_node():
+			BF = abs(parent.get_BF())
+			if BF < 2 and parent.height != prev_height:
+				self.rotation((parent.left.get_BF(), parent.right.get_BF()), parent)
 		return -1
 
+	def rotation(self, rotate, parent):
+		match rotate:
+			case (-2,-1):
+				parent.right.left = parent
+
+			case (-2,1):
+				tmp = parent.right
+				parent.right = parent.right.left
+				parent.right.right = tmp
+				parent.right.left = parent
+			case (2,-1):
+				tmp = parent.left
+				parent.left = parent.left.right
+				parent.left.left = tmp
+				parent.left.right = parent
+			case (2,1):
+				parent.left.right = parent
+
+		parent.left = None
+		parent.right = None
 
 	"""deletes node from the dictionary
 
@@ -183,6 +228,8 @@ class AVLTree(object):
 	@returns: the node with maximal (lexicographically) value having a<=key<=b, or None if no such keys exist
 	"""
 	def max_range(self, a, b):
+
+
 		return None
 
 
