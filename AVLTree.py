@@ -61,17 +61,16 @@ class AVLTree(object):
 	@returns: node corresponding to key
 	"""
 	def search(self, key):
-		"""
-		while 𝑥 ≠ 𝑛𝑢𝑙𝑙 do
-		if 𝑘 = 𝑥.𝑘𝑒𝑦 then
-		else if
-		return 𝑥
-		𝑘 < 𝑥.𝑘𝑒𝑦 then
-		𝑥 𝑥. 𝑟𝑖𝑔ℎ𝑡
-		𝑥 𝑥. 𝑙𝑒𝑓𝑡
-		else
-		return �
-		"""
+
+		node = self.root
+		while node.is_real_node():
+			if node.key == key:
+				return node
+			elif node.key < key:
+				node = node.right
+			else:
+				node = node.left
+
 		return None
 
 
