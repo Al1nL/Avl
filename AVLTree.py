@@ -96,7 +96,7 @@ class AVLTree(object):
 	@returns: a sorted list according to key of touples (key, value) representing the data structure
 	"""
 	def avl_to_array(self):
-
+		#todo: inorder
 		return None
 
 
