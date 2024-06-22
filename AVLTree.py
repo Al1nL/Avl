@@ -61,6 +61,17 @@ class AVLTree(object):
 	@returns: node corresponding to key
 	"""
 	def search(self, key):
+		"""
+		while 𝑥 ≠ 𝑛𝑢𝑙𝑙 do
+		if 𝑘 = 𝑥.𝑘𝑒𝑦 then
+		else if
+		return 𝑥
+		𝑘 < 𝑥.𝑘𝑒𝑦 then
+		𝑥 𝑥. 𝑟𝑖𝑔ℎ𝑡
+		𝑥 𝑥. 𝑙𝑒𝑓𝑡
+		else
+		return �
+		"""
 		return None
 
 
@@ -96,8 +107,15 @@ class AVLTree(object):
 	@returns: a sorted list according to key of touples (key, value) representing the data structure
 	"""
 	def avl_to_array(self):
-		#todo: inorder
-		return None
+		array = []
+		def to_array(node, array):
+			if node.is_real_node():
+				to_array(node.left, array)
+				array.append(node)
+				to_array(node.right, array)
+
+		to_array(self.root, array)
+		return array
 
 
 	"""returns the number of items in dictionary 
