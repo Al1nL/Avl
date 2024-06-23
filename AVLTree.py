@@ -39,6 +39,22 @@ class AVLNode(object):
 	def get_BF(self):
 		return self.left.height - self.right.height
 
+	def set_size(self):
+		self.size = 1
+		if self.left:
+			self.size += self.left.size
+		if self.right:
+			self.size += self.right.size
+
+
+	def set_height(self):
+		self.height = 1
+		m = n = -1
+		if self.right:
+			m = self.right.height
+		if self.left:
+			n = self.left.height
+		self.height = max(m, n) + 1
 """
 A class implementing an AVL tree.
 """
@@ -64,7 +80,7 @@ class AVLTree(object):
 	def search(self, key):
 
 		node = self.root
-		while node.is_real_node():
+		while node != None and node.is_real_node():
 			if node.key == key:
 				return node
 			elif node.key < key:
@@ -87,9 +103,15 @@ class AVLTree(object):
 	"""
 	def insert(self, key, val):
 		node = self.root
+
 		new = AVLNode(key, val)
+		new.height = 0
+		new.size = 1
+		new.left = AVLNode(None, "")
+		new.right = AVLNode(None, "")
+
 		parent = None
-		while node.is_real_node():
+		while node != None and node.is_real_node():
 			parent = node
 			if node.key < key:
 				node = node.right
@@ -97,42 +119,96 @@ class AVLTree(object):
 				node = node.left
 
 
-		if not parent.is_real_node():
-			parent = new
+		if parent == None:
+			self.root = new
+			return
 		elif key < parent.key:
 			parent.left = new
 		else:
 			parent.right = new
+		new.parent = parent
 
-		prev_height = parent.height
-		parent.height = max(parent.left.height, parent.right.height) +1
+		while parent != None:
 
-		while parent.is_real_node():
+			prev_height = parent.height
+			parent.height = max(parent.left.height, parent.right.height) + 1
+
+			parent.size = 1 + parent.left.size + parent.right.size
 			BF = abs(parent.get_BF())
-			if BF < 2 and parent.height != prev_height:
-				self.rotation((parent.left.get_BF(), parent.right.get_BF()), parent)
-		return -1
 
-	def rotation(self, rotate, parent):
+			if BF < 2 and parent.height != prev_height:
+				parent = parent.parent
+			elif BF == 2:
+				self.rotation(parent)
+			else:
+				parent = parent.parent
+		return
+
+	def rotation(self, parent, rotate = ()):
+
+		if(rotate == ()):
+			bf = parent.get_BF()
+			if bf >0:
+				other_bf = parent.left.get_BF()
+			else:
+				other_bf = parent.right.get_BF()
+
+			rotate = (bf, other_bf)
+
 		match rotate:
 			case (-2,-1):
-				parent.right.left = parent
+
+				if parent.parent != None:
+					# 3 -> 7
+					parent.parent.right = parent.right
+				# 7 parent = 3
+				parent.right.parent = parent.parent
+				# 6 parent = 7
+				parent.parent = parent.right
+
+				new_parent = parent.right
+				# 6 right -> 7 left
+				parent.right = parent.right.left
+				# 7 left -> 6
+				new_parent.left = parent
+
 
 			case (-2,1):
-				tmp = parent.right
-				parent.right = parent.right.left
-				parent.right.right = tmp
-				parent.right.left = parent
+				# tmp = parent.right
+				# parent.right = parent.right.left
+				# parent.right.right = tmp
+				# parent.right.left = parent
+				self.rotation(parent, (2,1))
+				self.rotation(parent.right, (-2,-1))
+
 			case (2,-1):
 				tmp = parent.left
 				parent.left = parent.left.right
 				parent.left.left = tmp
 				parent.left.right = parent
-			case (2,1):
-				parent.left.right = parent
 
-		parent.left = None
-		parent.right = None
+			case (2,1):
+				# parent.left.right = parent
+
+				# 3 -> 7
+				if parent.parent != None:
+					parent.parent.left = parent.left
+				# 7 parent = 3
+				parent.left.parent = parent.parent
+				# 6 parent = 7
+				parent.parent = parent.left
+
+				new_parent = parent.left
+				# 6 right -> 7 left
+				parent.left = parent.left.right
+				# 7 left -> 6
+				new_parent.right = parent
+
+		parent.set_size()
+		parent.set_height()
+		if self.root == parent:
+			self.root = parent.parent
+		return
 
 	"""deletes node from the dictionary
 
@@ -153,7 +229,7 @@ class AVLTree(object):
 	def avl_to_array(self):
 		array = []
 		def to_array(node, array):
-			if node.is_real_node():
+			if node != None and node.is_real_node():
 				to_array(node.left, array)
 				array.append(node)
 				to_array(node.right, array)
@@ -168,11 +244,12 @@ class AVLTree(object):
 	@returns: the number of items in dictionary 
 	"""
 	def size(self):
-		sum = (1 if self.root.is_real_node() else 0)
-		if self.root.left.is_real_node():
-			sum += self.root.left.size
-		if self.root.right.is_real_node():
-			sum += self.root.right.size
+		sum = (1 if self.root != None else 0)
+		if self.root != None:
+			if self.root.left != None:
+				sum += self.root.left.size
+			if self.root.right != None:
+				sum += self.root.right.size
 		return sum
 
 
@@ -240,3 +317,12 @@ class AVLTree(object):
 	"""
 	def get_root(self):
 		return self.root if self.root.is_real_node() else None
+
+
+if __name__ == '__main__':
+	tree = AVLTree()
+	tree.insert(6,"hello")
+	tree.insert(8,"hello")
+	tree.insert(7,"hello")
+	tree.insert(0,"hello")
+	tree.insert(1,"hello")
