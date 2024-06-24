@@ -27,6 +27,13 @@ class AVLNode(object):
         self.height = -1
         self.size = 0
 
+    """Updates the fields of a new node to be real 
+    """
+    def update_node_fields(self):
+        self.height = 0
+        self.size = 1
+        self.left = AVLNode(None, "")
+        self.right = AVLNode(None, "")
     """returns whether self is not a virtual node 
 
     @rtype: bool
@@ -116,12 +123,8 @@ class AVLTree(object):
 
     def insert(self, key, val):
         node = self.root
-
         new = AVLNode(key, val)
-        new.height = 0
-        new.size = 1
-        new.left = AVLNode(None, "")
-        new.right = AVLNode(None, "")
+        new.update_node_fields()
 
         parent = None
         while node != None and node.is_real_node():
@@ -139,7 +142,7 @@ class AVLTree(object):
         else:
             parent.right = new
         new.parent = parent
-
+        rotation_count = 0
         while parent != None:
 
             prev_height = parent.height
@@ -151,38 +154,33 @@ class AVLTree(object):
             if BF < 2 and parent.height != prev_height:
                 parent = parent.parent
             elif BF == 2:
-                self.rotation(parent)
+                rotation_count += self.rotation(parent)
             else:
                 parent = parent.parent
-        return
+
+        return rotation_count
 
     def rotation(self, parent, rotate=()):
         def rotate_right(node):
-            # 𝐵.𝑙𝑒𝑓𝑡←𝐴.𝑟𝑖𝑔ℎ𝑡
-            # 𝐵.𝑙𝑒𝑓𝑡.𝑝𝑎𝑟𝑒𝑛𝑡←𝐵
-            # 𝐴.𝑟𝑖𝑔ℎ𝑡←𝐵
-            # 𝐴.𝑝𝑎𝑟𝑒𝑛𝑡←𝐵.𝑝𝑎𝑟𝑒𝑛𝑡
-            # 𝐴.𝑝𝑎𝑟𝑒𝑛𝑡.𝑙𝑒𝑓𝑡/𝑟𝑖𝑔ℎ𝑡←𝐴
-            # # 𝐵.𝑝𝑎𝑟𝑒𝑛𝑡←𝐴
             new_parent = node.left
             node.left = new_parent.right
             node.left.parent = node
             new_parent.right = node
             new_parent.parent = node.parent
+
             if new_parent.parent != None:
                 if new_parent.parent.key > new_parent.key:
                     new_parent.parent.left = new_parent
                 else:
                     new_parent.parent.right = new_parent
             node.parent = new_parent
-
         def rotate_left(node):
-
             new_parent = node.right
             node.right = new_parent.left
             node.right.parent = node
             new_parent.left = node
             new_parent.parent = node.parent
+
             if new_parent.parent != None:
                 if new_parent.parent.key > new_parent.key:
                     new_parent.parent.left = new_parent
@@ -198,23 +196,20 @@ class AVLTree(object):
                 other_bf = parent.right.get_BF()
 
             rotate = (bf, other_bf)
+            rotation_count = 1 if rotate == (-2, -1) or rotate == (2, 1) else 2
 
         match rotate:
             case (-2, -1):
                 rotate_left(parent)
 
             case (-2, 1):
-                # tmp = parent.right
-                # parent.right = parent.right.left
-                # parent.right.right = tmp
-                # parent.right.left = parent
                 rotate_right(parent.right)
                 rotate_left(parent)
 
             case (2, -1):
                 rotate_left(parent.left)
                 rotate_right(parent)
-                
+
             case (2, 1):
                 rotate_left(parent)
 
@@ -222,7 +217,8 @@ class AVLTree(object):
         parent.set_height()
         if self.root == parent:
             self.root = parent.parent
-        return
+
+        return rotation_count
 
 
 """deletes node from the dictionary
