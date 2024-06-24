@@ -1,9 +1,8 @@
 # username - alinl
 # id1      - complete info
 # name1    - complete info
-# id2      - complete info
-# name2    - complete info
-
+# id2      - 324022904
+# name2    - Lior Pernik \ ליאור פרניק
 import TreePrint  # remove before submmision
 
 """A class represnting a node in an AVL tree"""
