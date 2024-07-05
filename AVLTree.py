@@ -1,6 +1,6 @@
 # username - alinl
-# id1      - complete info
-# name1    - complete info
+# id1      - 212535058
+# name1    - Alin loshevsky \ אלין לושבסקי
 # id2      - 324022904
 # name2    - Lior Pernik \ ליאור פרניק
 import TreePrint  # remove before submmision
