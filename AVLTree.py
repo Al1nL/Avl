@@ -93,6 +93,7 @@ class AVLTree(object):
     @param key: a key to be searched
     @rtype: AVLNode
     @returns: node corresponding to key
+    @note: time complexity: O(log n)
     """
     def search(self, key):
 
@@ -117,6 +118,7 @@ class AVLTree(object):
     @param val: the value of the item
     @rtype: int
     @returns: the number of rebalancing operation due to AVL rebalancing
+    @note: time complexity: O(log n)
     """
     def insert(self, key, val):
         node = self.root
@@ -207,6 +209,7 @@ class AVLTree(object):
        @params: parent: The starting node from which to fix the AVL tree.
        @summary: Perform AVL tree fix starting from `parent` up to the root.
        @return: The total count of rotations performed during fixing.
+       @note: time complexity: O(log n)
     """
     def fix_tree(self,parent):
         rotation_count = 0
@@ -340,6 +343,7 @@ class AVLTree(object):
     @pre: node is a real pointer to a node in self
     @rtype: int
     @returns: the number of rebalancing operation due to AVL rebalancing
+    @note: time complexity: O(log n)
     """
     def delete(self, node):
         parent = node.parent
@@ -388,6 +392,7 @@ class AVLTree(object):
     
     @rtype: list
     @returns: a sorted list according to key of touples (key, value) representing the data structure
+    @note: time complexity: O(n)
     """
     def avl_to_array(self):
         array = []
@@ -425,6 +430,7 @@ class AVLTree(object):
     @param node: a node in the dictionary to compute the rank for
     @rtype: int
     @returns: the rank of node in self
+    @note: time complexity: O(log n)
     """
     def rank(self, node):
         rank = node.left.size + 1
@@ -442,6 +448,7 @@ class AVLTree(object):
     @param i: the rank to be selected in self
     @rtype: AVLNode
     @returns: the node of rank i in self
+    @note: time complexity: O(log n)
     """
     def select(self, i):
 
@@ -467,6 +474,7 @@ class AVLTree(object):
     @pre: a<b
     @rtype: AVLNode
     @returns: the node with maximal (lexicographically) value having a<=key<=b, or None if no such keys exist
+    @note: time complexity: O(n)
     """
     def max_range(self, a, b):
 
