@@ -251,6 +251,7 @@ class AVLTree(object):
             BF = abs(parent.get_BF())
 
             if BF < 2 and parent.height != prev_height:
+                rotation_count += 1
                 parent = parent.parent
             elif BF == 2:
                 rotation_count += self.rotation(parent)
