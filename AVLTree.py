@@ -227,6 +227,7 @@ class AVLTree(object):
 
             # If balance factor is within [-1, 1] and height changed, move to parent's parent
             if BF < 2 and parent.height != prev_height:
+                rotation_count += 1
                 parent = parent.parent
 
             # If balance factor is 2, perform rotations and update rotation count.
